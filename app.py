@@ -29,6 +29,15 @@ df = pd.read_csv(
     'c353e8ef842413cae56ae3920b8fd78468aa4cb2/'
     'usa-agricultural-exports-2011.csv')
 
+# Can write text using markdown + Markdown component 
+markdown_text = '''
+### This is a Markdown Header
+
+Sample _fancy_ **markdown** ~~words~~ text :)   
+Dash uses the [CommonMark](http://commonmark.org/)
+specification of Markdown.
+'''
+
 # __name__ to ensure right path when loading from assets folder
 # external_stylesheets/external_scripts, assets_external_path to load from CDN
 # assets_ignored to prevent loading files
@@ -50,6 +59,9 @@ app.layout = html.Div(children=[
         }
     ),
 
+    # Using the Markdown component to format text
+    dcc.Markdown(children=markdown_text),
+
     # Not all components are pure HTML, can be built with React
     html.Div(
         children='A Sample Bar Chart',
@@ -59,8 +71,7 @@ app.layout = html.Div(children=[
         }
         ),
 
-    # figure argument is same figure from Plotly
-    # https://plot.ly/python/reference/
+    # Graph uses Plotly https://plot.ly/python/reference/
     dcc.Graph(
         id='example-graph',
         figure={
@@ -96,7 +107,6 @@ app.layout = html.Div(children=[
             'overflow' : 'scroll'
         }
     )
-    
 ])
 
 if __name__ == '__main__':
