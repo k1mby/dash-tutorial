@@ -2,18 +2,37 @@ import dash
 import dash_core_components as dcc 
 import dash_html_components as html 
 
+import pandas as pd
+
+# Creates a table component
+def generate_table(dataframe, max_rows=10):
+    return html.Table(
+        # Header
+        [html.Tr([html.Th(col) for col in dataframe.columns])] +
+
+        # Body
+        [html.Tr([
+            html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
+        ]) for i in range(min(len(dataframe), max_rows))]
+    )
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
+colors = {
+    'background': '#D7D7D7',
+    'text': '#4D4D4D'
+}
+
+df = pd.read_csv(
+    'https://gist.githubusercontent.com/chriddyp/'
+    'c78bf172206ce24f77d6363a2d754b59/raw/'
+    'c353e8ef842413cae56ae3920b8fd78468aa4cb2/'
+    'usa-agricultural-exports-2011.csv')
 
 # __name__ to ensure right path when loading from assets folder
 # external_stylesheets/external_scripts, assets_external_path to load from CDN
 # assets_ignored to prevent loading files
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
-# Defining colors to use in styles
-colors = {
-    'background': '#D7D7D7',
-    'text': '#4D4D4D'
-}
 
 # Layout is a tree structure of components
 # children property: inputs and outputs are properties of components
@@ -58,7 +77,26 @@ app.layout = html.Div(children=[
                 }
             }
         }
+    ),
+
+    html.H4(
+        children='Sample Table - US Agriculture Exports (2011)',
+        style={
+            'textAlign' : 'center',
+            'color' : colors['text']
+        }
+    ),
+
+    # Create the table
+    html.Div(
+        children=generate_table(df),
+        style={
+            'margin' : '0 auto',
+            'width' : '75%',
+            'overflow' : 'scroll'
+        }
     )
+    
 ])
 
 if __name__ == '__main__':
