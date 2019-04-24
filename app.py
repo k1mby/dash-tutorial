@@ -4,6 +4,8 @@ import dash_html_components as html
 
 import pandas as pd
 
+from dash.dependencies import Input, Output
+
 # Creates a table component
 def generate_table(dataframe, max_rows=10):
     return html.Table(
@@ -106,8 +108,24 @@ app.layout = html.Div(children=[
             'width' : '75%',
             'overflow' : 'scroll'
         }
-    )
+    ),
+
+    # Inputs/Outputs are properties of components
+    dcc.Input(id='my-input', value='initial value', type='text'),
+    html.Div(id='my-div')
+
 ])
+
+# Input is value property of component with id my-input 
+# Output is children property of component with id my-div
+# When input property changes function wrapped with @app.callback decorator is called
+# When app starts all callbacks called to populate output components with initial values
+@app.callback(
+    Output(component_id='my-div', component_property='children'),
+    [Input(component_id='my-input', component_property='value')]
+)
+def update_output_div(input_value):
+    return 'You\'ve entered "{}"'.format(input_value)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
