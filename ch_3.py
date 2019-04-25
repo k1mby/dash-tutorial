@@ -14,8 +14,10 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-# Slider and dropdown to update a scatter plot
 app.layout = html.Div([
+
+    # Multiple Inputs example - slider and dropdown to update a scatter plot
+    html.H3('Multiple Inputs Example'),
     html.Div('Minimum GDP'),
     dcc.Dropdown(
         id='gdp-dropdown',
@@ -29,12 +31,30 @@ app.layout = html.Div([
         max=df['year'].max(),
         value=df['year'].min(),
         marks={str(year): str(year) for year in df['year'].unique()}
-    )
+    ),
+
+    # Multiple outputs example - input number and table values
+    html.H3('Multiple Outputs Example', style={'padding-top':'50px'}),
+    html.Div([
+        dcc.Input(
+        id='num',
+        type='number',
+        value=5
+        ),
+        html.Table([
+            html.Tr([html.Td(['x', html.Sup(2)]), html.Td(id='square')]),
+            html.Tr([html.Td(['x', html.Sup(3)]), html.Td(id='cube')]),
+            html.Tr([html.Td([2, html.Sup('x')]), html.Td(id='twos')]),
+            html.Tr([html.Td([3, html.Sup('x')]), html.Td(id='threes')]),
+            html.Tr([html.Td(['x', html.Sup('x')]), html.Td(id='x^x')]),
+        ])
+    ])
 ])
 
 # Callback does not modify the data, creates copies of the dataframe
 # Don't change variables outside their scope, avoid expensive downloads/queries in callbacks
-# We can have multiple inputs - slider and dropdown here 
+
+# Multiple Inputs callback:
 @app.callback(
     Output('graph-with-slider', 'figure'),
     [Input('year-slider', 'value'), Input('gdp-dropdown', 'value')])
@@ -69,6 +89,17 @@ def update_figure(selected_year, selected_gdp):
             hovermode='closest'
         )
     }
+
+# Multiple outputs callback:
+@app.callback(
+    [Output('square', 'children'),
+     Output('cube', 'children'),
+     Output('twos', 'children'),
+     Output('threes', 'children'),
+     Output('x^x', 'children')],
+    [Input('num', 'value')])
+def callback_a(x):
+    return x**2, x**3, 2**x, 3**x, x**x
 
 
 if __name__ == '__main__':
