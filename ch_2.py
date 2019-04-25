@@ -48,7 +48,6 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 # Layout is a tree structure of components
 # children property: inputs and outputs are properties of components
 # children is first argument and can be omitted
-# We have an outer div with H1, div and graph inside
 app.layout = html.Div(children=[
 
     # Component class for every HTML tag and keywords for all attributes (camelCase)
